@@ -1,28 +1,26 @@
 version: "3.5"
 services:
-  postgresql:
-    container_name: temporal-postgresql
-    environment:
-      POSTGRES_PASSWORD: yugabyte
-      POSTGRES_USER: yugabyte
+  yugabytedb:
+    container_name: temporal-yugabytedb
     image: yugabytedb/yugabyte
     command: yugabyted start --background=false
     networks:
       - temporal-network
     ports:
       - 5433:5433
+      - 15433:15433
     volumes:
-      - /var/lib/postgresql/data
+      - /root/var
   temporal:
     container_name: temporal
     depends_on:
-      - postgresql
+      - yugabytedb
     environment:
       - DB=postgresql
       - DB_PORT=5433
       - POSTGRES_USER=yugabyte
       - POSTGRES_PWD=yugabyte
-      - POSTGRES_SEEDS=postgresql
+      - POSTGRES_SEEDS=yugabytedb
       - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development-sql.yaml
     image: temporalio/auto-setup:${TEMPORAL_VERSION}
     networks:

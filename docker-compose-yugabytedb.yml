@@ -5,11 +5,12 @@ services:
     environment:
       POSTGRES_PASSWORD: yugabyte
       POSTGRES_USER: yugabyte
-    image: pachot/yb-pglike
+    image: yugabytedb/yugabyte
+    command: yugabyted start --background=false
     networks:
       - temporal-network
     ports:
-      - 5432:5432
+      - 5433:5433
     volumes:
       - /var/lib/postgresql/data
   temporal:
@@ -18,7 +19,7 @@ services:
       - postgresql
     environment:
       - DB=postgresql
-      - DB_PORT=5432
+      - DB_PORT=5433
       - POSTGRES_USER=yugabyte
       - POSTGRES_PWD=yugabyte
       - POSTGRES_SEEDS=postgresql

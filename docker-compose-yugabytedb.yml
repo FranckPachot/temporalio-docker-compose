@@ -3,7 +3,7 @@ services:
   yugabytedb:
     container_name: temporal-yugabytedb
     image: yugabytedb/yugabyte
-    command: yugabyted start --background=false
+    command: yugabyted start --background=false --tserver_flags=ysql_colocate_database_by_default=true,yb_enable_read_committed_isolation=true,enable_deadlock_detection=true,enable_wait_queues=true,ysql_pg_conf_csv={yb_bnl_batch_size=1024,yb_enable_optimizer_statistics=on,yb_enable_base_scans_cost_model=on}
     networks:
       - temporal-network
     ports:
